@@ -13,9 +13,17 @@ import (
 
 func main() {
 	var plates arrayFlags
-	flag.Var(&plates, "p", "a plate name to check (shorthand for plate)")
+	flag.Var(&plates, "p", "a plate name to check (shorthand for -plate)")
 	flag.Var(&plates, "plate", "a plate name to check ")
 	flag.Parse()
+
+	if len(plates) == 0 {
+		println("Error: no license plates specified\n")
+		println("Usage:")
+		println("\t./plates -p {plate-name-1} -p {plate-name-2}\n")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
 
 	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 	defer w.Flush()
@@ -51,6 +59,8 @@ func checkPlate(w *tabwriter.Writer, plate string) {
 		if err != nil {
 			panic(err)
 		}
+	default:
+		panic("failed")
 	}
 }
 
